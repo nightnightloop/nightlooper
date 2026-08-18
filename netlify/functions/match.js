@@ -13,7 +13,7 @@
 // so discover never breaks.
 
 // ----- model (cheap + fast). Change this string if you prefer another. -----
-const MODEL = "claude-3-5-haiku-latest";
+const MODEL = "claude-haiku-4-5";
 
 // ===== EPISODE GUIDE — the evidence the agent reasons from. Edit freely. =====
 // n = episode number. "loop" = exact name shown to the listener.
