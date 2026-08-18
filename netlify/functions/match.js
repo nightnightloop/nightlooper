@@ -139,6 +139,7 @@ exports.handler = async (event) => {
     });
     if (!res.ok) {
       const t = await res.text();
+      console.log("ANTHROPIC ERROR", res.status, t.slice(0, 300));
       return { statusCode: 502, body: JSON.stringify({ error: "upstream", detail: t.slice(0, 200) }) };
     }
     const data = await res.json();
@@ -158,6 +159,7 @@ exports.handler = async (event) => {
       body: JSON.stringify(out)
     };
   } catch (err) {
+    console.log("FUNCTION ERROR", String(err).slice(0, 300));
     return { statusCode: 502, body: JSON.stringify({ error: "fail", detail: String(err).slice(0, 200) }) };
   }
 };
