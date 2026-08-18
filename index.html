@@ -132,6 +132,7 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
 .dv-beta{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:#5f6f66;text-transform:uppercase}
 .dv-sticker{display:inline-block;width:96px;height:82px;margin:-8px 0 -10px 2px;transform:rotate(-9deg);transform-origin:50% 50%;animation:stwob 2.6s ease-in-out infinite;pointer-events:none;flex:0 0 auto;position:relative;top:-6px}
 .dv.answered .dv-sticker{display:none}
+.dv.answered .dv-hint{display:none}
 @keyframes stwob{0%,100%{transform:rotate(-9deg) scale(1)}50%{transform:rotate(-4deg) scale(1.06)}}
 @media (prefers-reduced-motion:reduce){.dv-sticker{animation:none}}
 .dv-line{border-bottom:1px solid #55554f;padding:0 2px 12px;max-width:560px;margin-left:2px}
@@ -261,7 +262,7 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
     <div class="dv-res">
       <div class="lead" id="dvLead">you're on a</div>
       <div id="dvList"></div>
-      <div class="dv-acts"><button class="dv-btn" id="dvSuggest" style="display:none">suggest a theme</button><button class="dv-btn sub" id="dvLucky" style="display:none">i'm feeling lucky</button><button class="dv-btn sub" id="dvRetry">try again</button></div>
+      <div class="dv-acts" id="dvActs"><button class="dv-btn" id="dvSuggest" style="display:none">suggest a theme</button><button class="dv-btn sub" id="dvLucky" style="display:none">i'm feeling lucky</button></div>
     </div>
   </div>
 </div></div>
@@ -349,7 +350,7 @@ var STOP=["i","im","i'm","a","an","the","and","or","but","so","to","of","in","on
       hint=document.getElementById('dvHint'),think=document.getElementById('dvThink'),dots=document.getElementById('dvDots'),
       ansd=document.getElementById('dvAnswer'),echo=document.getElementById('dvEcho'),
       lead=document.getElementById('dvLead'),list=document.getElementById('dvList'),
-      sgb=document.getElementById('dvSuggest'),lkb=document.getElementById('dvLucky'),rtb=document.getElementById('dvRetry');
+      sgb=document.getElementById('dvSuggest'),lkb=document.getElementById('dvLucky');
   if(!inp) return;
   var dtimer=null,lastText='';
   function norm(x){return ' '+x.toLowerCase().replace(/[\u2019']/g,"'").replace(/[^a-z' ]+/g,' ').replace(/\s+/g,' ')+' ';}
@@ -387,7 +388,8 @@ var STOP=["i","im","i'm","a","an","the","and","or","but","so","to","of","in","on
     var b=document.createElement('button');b.className='rowplay';b.textContent=multi?('play '+m.loop.replace(' loop','')):'play it';
     b.onclick=function(){playEp(m.ep);};
     d.appendChild(n);d.appendChild(p);d.appendChild(b);return d;}
-  function acts(suggest,lucky){sgb.style.display=suggest?'':'none';lkb.style.display=lucky?'':'none';}
+  function acts(suggest,lucky){sgb.style.display=suggest?'':'none';lkb.style.display=lucky?'':'none';
+    var box=document.getElementById('dvActs');if(box)box.style.display=(suggest||lucky)?'flex':'none';}
   function msg(title,body,suggest,lucky){
     lead.textContent='';list.innerHTML='';
     var n=document.createElement('div');n.className='loopname';n.textContent=title;
@@ -454,20 +456,24 @@ var STOP=["i","im","i'm","a","an","the","and","or","but","so","to","of","in","on
       .then(function(res){if(to)clearTimeout(to);if(!res.ok)throw new Error('bad');return res.json();})
       .then(function(d){if(!d||!d.kind)return null;return d;});
   }
-  function showThinking(txt){lastText=txt;ask.style.display='none';ansd.style.display='none';think.style.display='block';
+  function showThinking(txt){lastText=txt;ansd.style.display='none';think.style.display='block';
     var n=0;clearInterval(dtimer);dtimer=setInterval(function(){n=(n+1)%4;dots.textContent=new Array(n+1).join('.')||'.';},260);}
   function stopThinking(){clearInterval(dtimer);}
-  function run(){var v=inp.value.trim();if(!v){inp.focus();return;}
-    showThinking(v);var t0=Date.now();
-    matchAI(v).then(function(r){
+  var pending='';
+  function run(){var raw=inp.value.trim();if(!raw){inp.focus();return;}
+    var feeling=pending?(pending+' \u2014 '+raw):raw;   // carry context from a follow-up question
+    showThinking(raw);var t0=Date.now();
+    matchAI(feeling).then(function(r){
       var wait=Math.max(0,650-(Date.now()-t0));
-      setTimeout(function(){stopThinking();if(r)paintAI(r,v);else paint(decide(v),v);},wait);
-    }).catch(function(){stopThinking();paint(decide(v),v);});
+      setTimeout(function(){stopThinking();
+        if(r)paintAI(r,raw);else paint(decide(raw),raw);
+        pending=(r&&r.kind==='ask')?feeling:'';        // remember context if it asked again
+        inp.value='';autosize();inp.focus();
+      },wait);
+    }).catch(function(){stopThinking();paint(decide(raw),raw);pending='';inp.value='';autosize();inp.focus();});
   }
   inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();run();}});
   hint.addEventListener('click',function(e){var b=e.target.closest('b[data-ex]');if(!b)return;inp.value=b.getAttribute('data-ex');autosize();run();});
-  rtb.onclick=function(){ansd.style.display='none';think.style.display='none';ask.style.display='block';
-    root.classList.remove('answered');inp.value='';autosize();inp.focus();};
   lkb.onclick=function(){var av=[],i;for(i=0;i<EPS.length;i++){if(EPS[i].src)av.push(i);}if(!av.length)return;playEp(av[Math.floor(Math.random()*av.length)]);};
   sgb.onclick=function(){var box=document.getElementById('cmMsg');
     if(box&&lastText)box.value=lastText;
