@@ -47,7 +47,12 @@ const EPISODES = [
   { n: 6, loop: "i'm feelin lucky loop", mode: "tastemaker",
     thesis: "open-format pleasure, present tense — 'i'm not trying to process anything, i'm just having a good summer.' daytime, sun, abundance, boldness, discovery, movement. no emotional homework, no thesis. breakup/longing songs appear but the episode is NOT about that — it's about feeling good and trusting the selector. 'be bold, be sexy, you might get lucky.'",
     yes: "a good mood / good day, going to the beach, driving in the sun, getting ready to go out, walking around somewhere beautiful, wanting something fun / eclectic / not depressing, 'just put me onto something,' feeling hot and bold, trying new things, end-of-summer let-me-enjoy-it, OR explicitly wanting something fun to get OUT of a bad situation (even a breakup) rather than to process it. daytime and present-tense are strong signals.",
-    no: "someone who actually wants to process grief/nostalgia/a crush/vulnerability. if they want to sit IN a feeling, pick the emotional episode instead." }
+    no: "someone who actually wants to process grief/nostalgia/a crush/vulnerability. if they want to sit IN a feeling, pick the emotional episode instead." },
+
+  { n: 7, loop: "blonde, 10 summers later loop", mode: "emotional",
+    thesis: "an ode to frank ocean's Blonde on its 10th anniversary — hazy, sonic nostalgia and pure nightlooping. lake's most personal, sound-first episode: 'some music becomes a place, and we keep returning.' the core question lake asks is 'are we returning to nostalgia, or is the mind just playing tricks again?' it's built from Blonde's whole universe — Frank himself (Nikes, Ivy, In Here Somewhere, Self Control), his influences and collaborators (D'Angelo 'Alabama' off Endless, The Beatles 'Here There and Everywhere', Alex G 'June Guitar' + his guitar on Self Control, Vegyn 'Debold', Slow Hollows 'Heart', Sampha), blonded-coded friends (Rosalia 'Candy', Lorde's 'Chewing Gum' demo), and Ryan Beatty 'Evergreen'. love turning into memory, memory turning into tenderness, nostalgia becoming devotion. a long night drive through your own past letting beautiful, interesting, unfinished sounds wash over you.",
+    yes: "wanting nostalgia for its own sake, missing a past summer or a younger version of you, 'a blonded summer', a long reflective night drive, Blonde / Frank Ocean feelings, naming any of these artists (Frank Ocean, Alex G, D'Angelo, Rosalia, Lorde, Vegyn, Slow Hollows, Sampha, Ryan Beatty, The Beatles-via-Frank), wanting interesting / hazy / unfinished / demo-raw / beautiful sounds over pop, 'just want to nightloop and drift', returning to music that feels like a place, ambient bittersweet longing that isn't about one specific person.",
+    no: "if the nostalgia is about ONE specific person you're remembering tonight (an ex, a hookup, the unsent text) that's ep3 i reminisce, not ep7. a present crush is ep4. fresh grief being processed is ep2. giddy new romance is ep1. bright daytime fun is ep6." }
 ];
 
 function guide(available) {
@@ -78,6 +83,7 @@ Two recommendation MODES:
 
 Critical distinctions to get right:
 - ep3 vs ep4: did something actually happen (ep3) or is it imagined / a crush with nothing real yet (ep4)?
+- ep3 vs ep7 (both nostalgic, they are cousins): ep3 is nostalgia for a SPECIFIC PERSON (an old lover, a situationship, missing their body/the intimacy, the text you won't send). ep7 is nostalgia for a SOUND, an ERA, or a former version of YOURSELF — hazy, drifting, not about one person. names a person/relationship -> ep3; describes a mood/era/sound or 'drifting through my past' -> ep7.
 - ep2 vs ep5: is there a WOUND being processed (ep2) or just emotional softness with nothing wrong (ep5)? tender is NOT heartbreak.
 - ep5 secure love: missing a partner when the relationship is fine (esp. long-distance) is ep5, NOT ep2.
 - ep6 is not defined by its breakup songs; a bad situation + a desire for fun = ep6.
