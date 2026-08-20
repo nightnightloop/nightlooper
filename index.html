@@ -493,13 +493,14 @@ var EP3_AUDIO="https://friendly-cuchufli-73902b.netlify.app/nightlooper_secretep
 var EP4_AUDIO="https://cosmic-clafoutis-38a615.netlify.app/nightlooper_ep4.m4a";
 var EP5_AUDIO="https://creative-dasik-3ad1dc.netlify.app/nightlooper_tender_v3_to_deploy.m4a";
 var EP6_AUDIO="https://splendorous-crostata-7cd0e0.netlify.app/nightlooper_ep6.m4a";
+var EP7_AUDIO="https://legendary-sherbet-814e57.netlify.app/nightlooper_ep7.m4a";
 var EPS=[{n:1,t:"nice 2 meet u",d:"45:43",bg:"mood-clouds",src:EP1_AUDIO},
          {n:2,t:"hurtsdunnit?",d:"52:16",bg:"mood-stars",src:EP2_AUDIO},
          {n:3,t:"i reminisce",d:"48:30",bg:"mood-cityscape",src:EP3_AUDIO},
          {n:4,t:"i had another dream about us last night",d:"53:35",bg:"mood-dream",src:EP4_AUDIO},
          {n:5,t:"tender",d:"51:05",bg:"mood-tender",src:EP5_AUDIO},
          {n:6,t:"i'm feelin lucky",d:"43:15",bg:"mood-lucky",src:EP6_AUDIO},
-         {n:7,t:"blonde, 10 summers later",d:"",bg:"mood-ferrari",src:null},
+         {n:7,t:"blonde, 10 summers later",d:"1:01:37",bg:"mood-ferrari",src:EP7_AUDIO},
          {n:8,t:"summer muse",d:"",bg:"",src:null},
          {n:9,t:"da art of departing",d:"",bg:"",src:null}];
 var cur=0, playing=false, p=0;
@@ -1097,7 +1098,7 @@ scbar.addEventListener('pointercancel',endScrub);
 (function(){
   var cv=document.getElementById('ferrarifield'); if(!cv) return;
   var ctx=cv.getContext('2d'), COL='234,231,221';
-  var W=0,H=0,dpr=1,t=0,last=0,cleared=false,horizon=0,vpx=0,carY=0,lane=0,laneTarget=0,dashes=[],stars=[],twinkleStars=[];
+  var W=0,H=0,dpr=1,t=0,last=0,cleared=false,horizon=0,vpx=0,carY=0,lane=0,laneTarget=0,dashes=[],stars=[],twinkleStars=[],shooters=[],shTimer=0,shNext=0;
   function rnd(a,b){return a+Math.random()*(b-a);}
   function ink(a){return 'rgba('+COL+','+Math.max(0,Math.min(1,a))+')';}
   function build(){
@@ -1106,6 +1107,15 @@ scbar.addEventListener('pointercancel',endScrub);
     stars=[]; var ns=Math.round(Math.min(26,W/26)),i;
     for(i=0;i<ns;i++)stars.push({x:rnd(0,W),y:rnd(0,horizon-10),r:rnd(.7,1.5),tw:rnd(0,6.28),tws:rnd(.4,1.1),born:1});
     dashes=[]; for(i=0;i<9;i++)dashes.push(i/9); // 0..1 positions along the road (0=near,1=far)
+    shooters=[]; shTimer=0; shNext=rnd(1.2,3);
+  }
+  // a shooting star streaks across the upper sky, leaving a fading cream trail (like ep2)
+  function shoot(){
+    var y=rnd(H*0.05,horizon*0.7), fromLeft=Math.random()<0.5;
+    var x=fromLeft?rnd(-40,W*0.2):rnd(W*0.8,W+40);
+    var dir=fromLeft?1:-1, sp=rnd(7,11);
+    var ang=rnd(0.18,0.42); // slight downward slope
+    shooters.push({x:x,y:y,vx:dir*sp,vy:sp*ang,r:rnd(1.2,2),trail:[],mt:12+((Math.random()*8)|0)});
   }
   function rsz(){dpr=Math.min(window.devicePixelRatio||1,2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);build();}
   // road half-width at a given screen y (0 at horizon, widening downward)
@@ -1120,6 +1130,10 @@ scbar.addEventListener('pointercancel',endScrub);
     lane += (laneTarget-lane)*Math.min(1,dt*10);
     // fade in freshly tapped stars
     for(i=0;i<stars.length;i++){if(stars[i].born<1)stars[i].born=Math.min(1,stars[i].born+dt*2);}
+    // shooting stars: spawn on a timer, advance, drop off-screen
+    shTimer+=dt; if(shTimer>=shNext){shTimer=0;shNext=rnd(2.2,4.5);shoot();}
+    for(i=0;i<shooters.length;i++){var sh=shooters[i];sh.trail.push([sh.x,sh.y]);if(sh.trail.length>sh.mt)sh.trail.shift();sh.x+=sh.vx;sh.y+=sh.vy;}
+    shooters=shooters.filter(function(s){return s.x>-80&&s.x<W+80&&s.y<horizon+40;});
   }
   function roadX(centerOffset, f){ // f: 0 near(bottom) .. 1 far(horizon); centerOffset in [-1,1] across road
     var y=H-(H-horizon)*f, half=roadHalf(y);
@@ -1129,6 +1143,10 @@ scbar.addEventListener('pointercancel',endScrub);
     ctx.lineCap='round';ctx.lineJoin='round';
     // stars
     for(i=0;i<stars.length;i++){var s=stars[i];var a=(.35+.5*Math.sin(t*s.tws+s.tw))*s.born;ctx.fillStyle=ink(a*.85);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.283);ctx.fill();}
+    // shooting stars (fading cream trail + bright head)
+    for(i=0;i<shooters.length;i++){var sh=shooters[i];
+      for(var j=1;j<sh.trail.length;j++){var aa=(j/sh.trail.length)*.6;ctx.strokeStyle=ink(aa);ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(sh.trail[j-1][0],sh.trail[j-1][1]);ctx.lineTo(sh.trail[j][0],sh.trail[j][1]);ctx.stroke();}
+      ctx.fillStyle=ink(.95);ctx.beginPath();ctx.arc(sh.x,sh.y,sh.r,0,6.283);ctx.fill();}
     // moon
     ctx.strokeStyle=ink(.8);ctx.lineWidth=1.5;ctx.fillStyle='#000';crescent(W*0.18,horizon*0.5,Math.max(14,H*0.045));ctx.fill();ctx.stroke();
     // horizon
@@ -1162,13 +1180,19 @@ scbar.addEventListener('pointercancel',endScrub);
   // --- interaction: drag the car left/right (bounded by road), tap sky to add stars ---
   var dragging=false;
   function nearCar(px,py){var cx=carCenterX();return (py>carY-70 && py<carY+30 && Math.abs(px-cx)<70);}
+  function shootFrom(px,py,k){for(var q=0;q<k;q++){var dir=Math.random()<.5?1:-1,sp=rnd(7,11),ang=rnd(0.14,0.4);
+    shooters.push({x:px,y:py,vx:dir*sp,vy:sp*ang,r:rnd(1.2,2),trail:[],mt:12+((Math.random()*8)|0)});}}
+  function starNear(px,py){for(var i=0;i<stars.length;i++){var s=stars[i],dx=s.x-px,dy=s.y-py;if(dx*dx+dy*dy<18*18)return i;}return -1;}
   function onDown(e){ if(!ferrariActive) return;
     if(e.target.closest('#win')||e.target.closest('.dock')||e.target.closest('.menubar')||e.target.closest('.statusbar'))return;
     var px=e.clientX,py=e.clientY;
     if(nearCar(px,py)){dragging=true; setLane(px); e.preventDefault(); }
-    else if(py<horizon){ // tap sky -> a star appears (with a tiny twinkle-in)
-      stars.push({x:px,y:py,r:rnd(1,1.8),tw:rnd(0,6.28),tws:rnd(.5,1.2),born:0});
-      if(stars.length>140)stars.splice(0,stars.length-140);
+    else if(py<horizon){ // tap the sky (like ep2)
+      var hit=starNear(px,py);
+      if(hit>=0){ var s=stars[hit]; shootFrom(s.x,s.y,2+((Math.random()*2)|0)); } // clicked a star -> it flares into shooting stars
+      else { stars.push({x:px,y:py,r:rnd(1,1.8),tw:rnd(0,6.28),tws:rnd(.5,1.2),born:0}); // empty sky -> new star + a shooting star from here
+             if(stars.length>140)stars.splice(0,stars.length-140);
+             shootFrom(px,py,1); }
     }
   }
   function setLane(px){var lim=laneRange(); laneTarget=Math.max(-lim,Math.min(lim,px-vpx)); }
