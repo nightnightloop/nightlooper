@@ -207,7 +207,11 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
   .seek svg{width:25px;height:25px}
   .play svg{width:30px;height:30px}
   .erow .nm{font-size:14.5px}
-  .dock{flex-wrap:wrap}
+  .dock{gap:8px;padding:10px 10px calc(10px + env(safe-area-inset-bottom,0px));flex-wrap:nowrap}
+  .dtile{flex:1 1 0;min-width:0;width:auto;height:auto;padding:10px 2px;gap:5px;border-radius:12px}
+  .dtile:hover{transform:none}
+  .dicon svg{width:21px;height:21px}
+  .dlabel{font-size:10px;letter-spacing:0;white-space:nowrap}
   .cm-body{padding:20px 18px 18px}
 }
 </style></head>
