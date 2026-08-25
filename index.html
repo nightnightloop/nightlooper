@@ -214,8 +214,32 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
   .dlabel{font-size:10px;letter-spacing:0;white-space:nowrap}
   .cm-body{padding:20px 18px 18px}
 }
+.nlwelcome{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.72);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;transition:opacity .28s ease}
+.nlwelcome.show{opacity:1}
+.nlwelcome[hidden]{display:none}
+.nlw-card{width:100%;max-width:432px;background:#242426;border:1px solid #3a3a3d;border-radius:14px;overflow:hidden;box-shadow:0 30px 70px -20px rgba(0,0,0,.8);transform:translateY(10px) scale(.98);transition:transform .28s ease;max-height:86vh;display:flex;flex-direction:column}
+.nlwelcome.show .nlw-card{transform:none}
+.nlw-bar{display:flex;align-items:center;gap:8px;padding:11px 13px;background:#323234;border-bottom:1px solid #1f1f20;flex:0 0 auto}
+.nlw-barlabel{font-family:var(--mono);font-size:12px;color:#bfbeb5;margin-left:6px}
+.nlw-body{padding:26px 26px calc(26px + env(safe-area-inset-bottom,0px));overflow:auto;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Helvetica,Arial,sans-serif}
+.nlw-h{margin:0 0 16px;font-family:inherit;font-size:19px;font-weight:600;color:#f4f3ef;line-height:1.3;letter-spacing:-.01em}
+.nlw-p{margin:0 0 14px;font-family:inherit;font-size:14px;line-height:1.5;color:#c7c6be;font-weight:400}
+.nlw-p:last-child{margin-bottom:0}
+@media (max-width:560px){.nlw-h{font-size:18px}.nlw-card{border-radius:16px}}
+@media (prefers-reduced-motion:reduce){.nlwelcome,.nlw-card{transition:none}}
 </style></head>
 <body>
+<div class="nlwelcome" id="nlWelcome" hidden>
+  <div class="nlw-card" role="dialog" aria-modal="true" aria-labelledby="nlwTitle">
+    <div class="nlw-bar"><span class="tl r" id="nlwClose" title="close"></span><span class="nlw-barlabel">welcome</span></div>
+    <div class="nlw-body">
+      <h2 class="nlw-h" id="nlwTitle">first time nightlooping?</h2>
+      <p class="nlw-p">welcome to nightlooper. i&rsquo;m your host, lake &mdash; playing tunes based on moods, memories, and feelings.</p>
+      <p class="nlw-p">start with discover, tune into the latest episode, visit instagram for tracklists and details, and don&rsquo;t forget to interact with the background.</p>
+      <p class="nlw-p">stick around for the loops!</p>
+    </div>
+  </div>
+</div>
 <div class="desktop" id="desktop">
   <div class="bg">
     <div class="bg-clouds bg-layer"><canvas id="cloudfield"></canvas></div>
@@ -508,6 +532,7 @@ var EPS=[{n:1,t:"nice 2 meet u",d:"45:43",bg:"mood-clouds",src:EP1_AUDIO},
          {n:8,t:"summer muse",d:"",bg:"",src:null},
          {n:9,t:"da art of departing",d:"",bg:"",src:null}];
 var cur=0, playing=false, p=0;
+(function(){for(var i=EPS.length-1;i>=0;i--){if(EPS[i]&&EPS[i].src){cur=i;break;}}})(); // default to the latest playable episode
 var bigt=document.getElementById('bigtitle'),eplist=document.getElementById('eplist');
 var audio=document.getElementById('player'), play=document.getElementById('play');
 var sf=document.getElementById('scfill'),scd=document.getElementById('scdot'),scbar=document.getElementById('scbar');
@@ -1208,6 +1233,19 @@ scbar.addEventListener('pointercancel',endScrub);
   document.addEventListener('pointercancel',onUp);
   window.addEventListener('resize',rsz);
   rsz();requestAnimationFrame(loop);
+})();
+// ---- first-time welcome popup (shows once via localStorage; degrades gracefully if blocked) ----
+(function(){
+  var w=document.getElementById('nlWelcome'); if(!w) return;
+  function seen(){try{return localStorage.getItem('nl_welcomed')==='1';}catch(e){return false;}}
+  function mark(){try{localStorage.setItem('nl_welcomed','1');}catch(e){}}
+  function open(){w.hidden=false;requestAnimationFrame(function(){w.classList.add('show');});}
+  function close(){w.classList.remove('show');mark();setTimeout(function(){w.hidden=true;},300);}
+  if(!seen()) setTimeout(open,650);
+  var c=document.getElementById('nlwClose');
+  if(c)c.onclick=close;
+  w.addEventListener('click',function(e){if(e.target===w)close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!w.hidden)close();});
 })();
 </script>
 <form name="community" class="nf-detect" data-netlify="true" netlify-honeypot="bot-field" hidden>
