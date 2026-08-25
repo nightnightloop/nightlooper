@@ -220,6 +220,8 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
 .nlw-card{width:100%;max-width:432px;background:#242426;border:1px solid #3a3a3d;border-radius:14px;overflow:hidden;box-shadow:0 30px 70px -20px rgba(0,0,0,.8);transform:translateY(10px) scale(.98);transition:transform .28s ease;max-height:86vh;display:flex;flex-direction:column}
 .nlwelcome.show .nlw-card{transform:none}
 .nlw-bar{display:flex;align-items:center;gap:8px;padding:11px 13px;background:#323234;border-bottom:1px solid #1f1f20;flex:0 0 auto}
+#nlwClose{position:relative}
+#nlwClose::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:50%}
 .nlw-barlabel{font-family:var(--mono);font-size:12px;color:#bfbeb5;margin-left:6px}
 .nlw-body{padding:26px 26px calc(26px + env(safe-area-inset-bottom,0px));overflow:auto;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Helvetica,Arial,sans-serif}
 .nlw-h{margin:0 0 16px;font-family:inherit;font-size:19px;font-weight:600;color:#f4f3ef;line-height:1.3;letter-spacing:-.01em}
@@ -231,12 +233,12 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
 <body>
 <div class="nlwelcome" id="nlWelcome" hidden>
   <div class="nlw-card" role="dialog" aria-modal="true" aria-labelledby="nlwTitle">
-    <div class="nlw-bar"><span class="tl r" id="nlwClose" title="close"></span><span class="tl y"></span><span class="tl g"></span><span class="nlw-barlabel">welcome</span></div>
+    <div class="nlw-bar"><span class="tl r" id="nlwClose" title="close"></span><span class="nlw-barlabel">welcome</span></div>
     <div class="nlw-body">
-      <h2 class="nlw-h" id="nlwTitle">first time nightlooping?</h2>
+      <h2 class="nlw-h" id="nlwTitle">first time?</h2>
       <p class="nlw-p">welcome to nightlooper. i&rsquo;m your host, lake &mdash; playing tunes based on moods, memories, and feelings.</p>
-      <p class="nlw-p">start with discover, tune into the latest episode, visit instagram for tracklists and details, and don&rsquo;t forget to interact with the background.</p>
-      <p class="nlw-p">stick around for the loops!</p>
+      <p class="nlw-p">start with discover, tune into the latest episode, visit instagram for tracklists and details, and don&rsquo;t forget to play with the background.</p>
+      <p class="nlw-p">thanks for looping!</p>
     </div>
   </div>
 </div>
