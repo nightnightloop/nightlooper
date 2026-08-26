@@ -461,6 +461,8 @@ var STOP=["i","im","i'm","a","an","the","and","or","but","so","to","of","in","on
     d.appendChild(nm);d.appendChild(p);d.appendChild(b);return d;}
   function paintAI(r,txt){
     echo.textContent=txt;
+    // never surface the playful 'i'm feeling lucky' path on heavy/grief input
+    var heavy=/\b(grie(f|ving|ve)|death|died|dying|passed away|funeral|loss|lost (my|her|him|them|someone)|mourn|suicid|dead)\b/i.test(txt||'');
     if(r.kind==='match'&&r.loops&&r.loops.length){
       var multi=r.loops.length>1;
       lead.textContent=multi?"sounds like more than one":"you're on a";
@@ -468,13 +470,13 @@ var STOP=["i","im","i'm","a","an","the","and","or","but","so","to","of","in","on
       for(var i=0;i<r.loops.length;i++){var L=r.loops[i];list.appendChild(loopRowAI(L.loop,L.line,L.n,multi));}
       acts(false,false);
     } else if(r.kind==='universal'){
-      msg("every episode is about "+(r.word||'that')+".", r.line||"narrow it down \u2014 what's it really about tonight?", false,true);
+      msg("every episode is about "+(r.word||'that')+".", r.line||"narrow it down \u2014 what's it really about tonight?", false,!heavy);
     } else if(r.kind==='vague'){
-      msg("be more specific.", r.line||"give me the scene, not the word. where are you, what time is it, who are you thinking about?", false,true);
+      msg("be more specific.", r.line||"give me the scene, not the word. where are you, what time is it, who are you thinking about?", false,!heavy);
     } else if(r.kind==='ask'){
       msg("one thing first \u2014", r.line||"tell me a little more?", false,false);
     } else {
-      msg("i don't have a loop for that yet.", r.line||"none of these are quite it. tell me what it should sound like and it might become one.", true,true);
+      msg("i don't have a loop for that yet.", r.line||"none of these are quite it. tell me what it should sound like and it might become one.", true,!heavy);
     }
     think.style.display='none';ansd.style.display='block';root.classList.add('answered');}
   function matchAI(text){
