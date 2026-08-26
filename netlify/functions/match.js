@@ -109,7 +109,7 @@ Reply with ONLY a JSON object, one of:
 Match (usually ONE loop; two only if the feeling truly lives between them):
 {"kind":"match","loops":[{"n":<num>,"loop":"<exact loop name>","line":"<why it fits, lake's voice>"}]}
 
-One broad word that fits every episode (just "love", "music", "yearning"):
+One broad word that TRULY fits every episode equally (only "love", "music", "songs", "vibes", "feelings", "yearning"). Use RARELY. NEVER use universal for a word that is itself an episode's name or core mood — "tender", "lucky", "reminisce", "blonde", "nostalgia", "grief", "grieving", "crush", "dream" all point to a SPECIFIC episode, so match (or, for grief, ask) — do not call them universal:
 {"kind":"universal","word":"<word>","line":"<lowercase line asking them to narrow it>"}
 
 Too vague/empty to place ("idk", "hi"):
