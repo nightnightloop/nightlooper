@@ -115,7 +115,7 @@ One broad word that fits every episode (just "love", "music", "yearning"):
 Too vague/empty to place ("idk", "hi"):
 {"kind":"vague","line":"<lowercase line asking for the scene>"}
 
-A real, specific feeling that genuinely fits none of the AVAILABLE loops:
+A real, specific feeling that genuinely fits none of the AVAILABLE loops (use RARELY — only for clearly off-topic requests like a genre/activity the show doesn't cover, e.g. "gym hype" or "focus music for studying"). NEVER use nomatch for any emotional state, and NEVER for grief, loss, death, heartbreak, loneliness, or missing someone — those always route to hurtsdunnit or tender. Never say "that's a different radio" to someone in pain:
 {"kind":"nomatch","line":"<lowercase line admitting there's no loop for that yet>"}
 
 Two loops tie and one question would decide it:
