@@ -21,6 +21,7 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
 .desktop.is-playing.mood-tender .bg-tender{opacity:1}
 .desktop.is-playing.mood-lucky .bg-lucky{opacity:1}
 .desktop.is-playing.mood-ferrari .bg-ferrari{opacity:1}
+.desktop.is-playing.mood-muse .bg-muse{opacity:1}
 .desktop.on-discover .bg-morse{opacity:1}
 .bg-morse{transition:opacity .55s ease}
 .bg-clouds canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -30,6 +31,7 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
 .bg-tender canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .bg-lucky canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .bg-ferrari canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.bg-muse canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 
 .desktop{position:relative;min-height:100vh;display:flex;flex-direction:column}
 .menubar,.stage,.dock,.statusbar{position:relative;z-index:1}
@@ -130,6 +132,10 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
 .dv-top h2{margin:0;font-family:var(--mono);font-size:21px;font-weight:400;color:#e8e7e2;letter-spacing:.01em;line-height:1.35}
 .dv.answered .dv-top h2{color:#6f7a74;font-size:18px}
 .dv-beta{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:#5f6f66;text-transform:uppercase}
+.dv-restart{margin-left:auto;display:none;align-items:center;gap:6px;background:none;border:1px solid #3a3a36;color:#8a938c;font-family:var(--mono);font-size:12px;padding:6px 12px;border-radius:8px;cursor:pointer;transition:.15s;align-self:center}
+.dv-restart:hover{border-color:#5f6f66;color:#cfcdc6}
+.dv-restart svg{width:13px;height:13px}
+.dv.answered .dv-restart{display:inline-flex}
 .dv-sticker{display:inline-block;width:96px;height:82px;margin:-8px 0 -10px 2px;transform:rotate(-9deg);transform-origin:50% 50%;animation:stwob 2.6s ease-in-out infinite;pointer-events:none;flex:0 0 auto;position:relative;top:-6px}
 .dv.answered .dv-sticker{display:none}
 .dv.answered .dv-hint{display:none}
@@ -207,11 +213,41 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
   .seek svg{width:25px;height:25px}
   .play svg{width:30px;height:30px}
   .erow .nm{font-size:14.5px}
-  .dock{flex-wrap:wrap}
+  .dock{gap:8px;padding:10px 10px calc(10px + env(safe-area-inset-bottom,0px));flex-wrap:nowrap}
+  .dtile{flex:1 1 0;min-width:0;width:auto;height:auto;padding:10px 2px;gap:5px;border-radius:12px}
+  .dtile:hover{transform:none}
+  .dicon svg{width:21px;height:21px}
+  .dlabel{font-size:10px;letter-spacing:0;white-space:nowrap}
   .cm-body{padding:20px 18px 18px}
 }
+.nlwelcome{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.72);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;transition:opacity .28s ease}
+.nlwelcome.show{opacity:1}
+.nlwelcome[hidden]{display:none}
+.nlw-card{width:100%;max-width:432px;background:#242426;border:1px solid #3a3a3d;border-radius:14px;overflow:hidden;box-shadow:0 30px 70px -20px rgba(0,0,0,.8);transform:translateY(10px) scale(.98);transition:transform .28s ease;max-height:86vh;display:flex;flex-direction:column}
+.nlwelcome.show .nlw-card{transform:none}
+.nlw-bar{display:flex;align-items:center;gap:8px;padding:11px 13px;background:#323234;border-bottom:1px solid #1f1f20;flex:0 0 auto}
+#nlwClose{position:relative}
+#nlwClose::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:50%}
+.nlw-barlabel{font-family:var(--mono);font-size:12px;color:#bfbeb5;margin-left:6px}
+.nlw-body{padding:26px 26px calc(26px + env(safe-area-inset-bottom,0px));overflow:auto;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Helvetica,Arial,sans-serif}
+.nlw-h{margin:0 0 16px;font-family:inherit;font-size:19px;font-weight:600;color:#f4f3ef;line-height:1.3;letter-spacing:-.01em}
+.nlw-p{margin:0 0 14px;font-family:inherit;font-size:14px;line-height:1.5;color:#c7c6be;font-weight:400}
+.nlw-p:last-child{margin-bottom:0}
+@media (max-width:560px){.nlw-h{font-size:18px}.nlw-card{border-radius:16px}}
+@media (prefers-reduced-motion:reduce){.nlwelcome,.nlw-card{transition:none}}
 </style></head>
 <body>
+<div class="nlwelcome" id="nlWelcome" hidden>
+  <div class="nlw-card" role="dialog" aria-modal="true" aria-labelledby="nlwTitle">
+    <div class="nlw-bar"><span class="tl r" id="nlwClose" title="close"></span><span class="nlw-barlabel">welcome</span></div>
+    <div class="nlw-body">
+      <h2 class="nlw-h" id="nlwTitle">first time?</h2>
+      <p class="nlw-p">welcome to nightlooper. i&rsquo;m your host, lake &mdash; playing tunes based on moods, memories, and feelings.</p>
+      <p class="nlw-p">start with discover, tune into the latest episode, visit instagram for tracklists and details, and don&rsquo;t forget to play with the background.</p>
+      <p class="nlw-p">thanks for looping!</p>
+    </div>
+  </div>
+</div>
 <div class="desktop" id="desktop">
   <div class="bg">
     <div class="bg-clouds bg-layer"><canvas id="cloudfield"></canvas></div>
@@ -221,6 +257,7 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
     <div class="bg-tender bg-layer"><canvas id="tenderfield"></canvas></div>
     <div class="bg-lucky bg-layer"><canvas id="koifield"></canvas></div>
     <div class="bg-ferrari bg-layer"><canvas id="ferrarifield"></canvas></div>
+    <div class="bg-muse bg-layer"><canvas id="musefield"></canvas></div>
     <div class="bg-morse bg-layer"><canvas id="morsefield"></canvas></div>
   </div>
   <div class="menubar"><span class="ticker"><span class="track">on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;</span></span><span class="vol"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span></div>
@@ -251,7 +288,7 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
 </div></div>
     <div class="view" id="view-discover">
 <div class="dv" id="dvRoot">
-  <div class="dv-top"><h2>what kind of night loop are you on?</h2><span class="dv-beta">beta</span><svg class="dv-sticker" viewBox="0 0 120 104" xmlns="http://www.w3.org/2000/svg" aria-label="try me, version 2"><defs><pattern id="halftone" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#E0431C"/></pattern></defs><path d="M60,4 L69,28 L88,10 L86,34 L112,30 L92,48 L118,60 L92,66 L104,90 L78,80 L80,102 L62,86 L50,102 L46,80 L24,90 L28,66 L4,62 L26,48 L8,28 L34,32 L34,8 L50,26 Z" fill="#F2C61D" stroke="#111" stroke-width="4" stroke-linejoin="round"/><path d="M60,4 L69,28 L88,10 L86,34 L112,30 L92,48 L118,60 L92,66 L104,90 L78,80 L80,102 L62,86 L50,102 L46,80 L24,90 L28,66 L4,62 L26,48 L8,28 L34,32 L34,8 L50,26 Z" fill="url(#halftone)" opacity=".55"/><text x="61" y="60" text-anchor="middle" font-family="'Caveat',cursive" font-size="29" fill="#111" transform="rotate(-3 61 60)">try me!</text></svg></div>
+  <div class="dv-top"><h2>what kind of night loop are you on?</h2><span class="dv-beta">beta</span><svg class="dv-sticker" viewBox="0 0 120 104" xmlns="http://www.w3.org/2000/svg" aria-label="try me, version 2"><defs><pattern id="halftone" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#E0431C"/></pattern></defs><path d="M60,4 L69,28 L88,10 L86,34 L112,30 L92,48 L118,60 L92,66 L104,90 L78,80 L80,102 L62,86 L50,102 L46,80 L24,90 L28,66 L4,62 L26,48 L8,28 L34,32 L34,8 L50,26 Z" fill="#F2C61D" stroke="#111" stroke-width="4" stroke-linejoin="round"/><path d="M60,4 L69,28 L88,10 L86,34 L112,30 L92,48 L118,60 L92,66 L104,90 L78,80 L80,102 L62,86 L50,102 L46,80 L24,90 L28,66 L4,62 L26,48 L8,28 L34,32 L34,8 L50,26 Z" fill="url(#halftone)" opacity=".55"/><text x="61" y="60" text-anchor="middle" font-family="'Caveat',cursive" font-size="29" fill="#111" transform="rotate(-3 61 60)">try me!</text></svg><button class="dv-restart" id="dvRestart" title="restart search" aria-label="restart search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/></svg>restart</button></div>
   <div id="dvAsk">
     <div class="dv-line"><textarea id="dvIn" rows="1" placeholder="late walk, kinda missing someone but pretending i'm fine"></textarea></div>
     <div class="dv-hint" id="dvHint">press enter &nbsp;·&nbsp; or try <b data-ex="just met someone and i can't stop smiling, sending cute texts all day">new crush</b> &nbsp; <b data-ex="my friendship ended and i feel like i'm becoming someone else">growing pains</b> &nbsp; <b data-ex="i keep thinking about texting them but i know i shouldn't">unsent text</b></div>
@@ -302,6 +339,7 @@ var dreamActive=false;
 var tenderActive=false;
 var luckyActive=false;
 var ferrariActive=false;
+var museActive=false;
 var curView='radio';
 var morseActive=false;
 function go(view){
@@ -416,7 +454,7 @@ var STOP=["i","im","i'm","a","an","the","and","or","but","so","to","of","in","on
           "only three episodes so far, and none of them are quite this. tell me what it should sound like and it might become one.",
           true,true);
     }
-    think.style.display='none';ansd.style.display='block';root.classList.add('answered');}
+    think.style.display='none';ansd.style.display='block';root.classList.add('answered');var _rb=document.getElementById('dvRestart');if(_rb)_rb.style.display='inline-flex';}
   function autosize(){inp.style.height='auto';inp.style.height=Math.min(inp.scrollHeight,140)+'px';}
   inp.addEventListener('input',autosize);
   // ---- AI path: ask the Netlify function; fall back to the keyword matcher if anything fails ----
@@ -431,6 +469,22 @@ var STOP=["i","im","i'm","a","an","the","and","or","but","so","to","of","in","on
     d.appendChild(nm);d.appendChild(p);d.appendChild(b);return d;}
   function paintAI(r,txt){
     echo.textContent=txt;
+    // never surface the playful 'i'm feeling lucky' path on heavy/grief input
+    var heavy=/\b(grie(f|ving|ve)|death|died|dying|passed away|funeral|loss|lost (my|her|him|them|someone|a)|mourn|suicid|dead|heartbreak|heartbroken)\b/i.test(txt||'');
+    // safety net: if grief input ever comes back as nomatch/universal, route it to hurtsdunnit ourselves
+    if(heavy && r && (r.kind==='nomatch'||r.kind==='universal')){
+      var hn=epIndexByN(2)>=0?2:null;
+      if(hn){r={kind:'match',loops:[{n:2,loop:'hurtsdunnit loop',line:'for the grief that shows up before the growth does. come sit with it.'}]};}
+    }
+    // safety net: an exact episode mood-word (tender/lucky/reminisce/blonde/dream) should match that episode, never 'universal'
+    if(r && r.kind==='universal'){
+      var word=(txt||'').trim().toLowerCase();
+      var wmap={'tender':5,'lucky':6,"i'm feelin lucky":6,'feelin lucky':6,'reminisce':3,'blonde':7,'blonded':7,'dream':4};
+      if(wmap[word]!==undefined && epIndexByN(wmap[word])>=0){
+        var wl={5:'tender loop',6:"i'm feelin lucky loop",3:'i reminisce loop',7:'blonde, 10 summers later loop',4:'i had another dream about us last night loop'};
+        r={kind:'match',loops:[{n:wmap[word],loop:wl[wmap[word]],line:''}]};
+      }
+    }
     if(r.kind==='match'&&r.loops&&r.loops.length){
       var multi=r.loops.length>1;
       lead.textContent=multi?"sounds like more than one":"you're on a";
@@ -438,15 +492,15 @@ var STOP=["i","im","i'm","a","an","the","and","or","but","so","to","of","in","on
       for(var i=0;i<r.loops.length;i++){var L=r.loops[i];list.appendChild(loopRowAI(L.loop,L.line,L.n,multi));}
       acts(false,false);
     } else if(r.kind==='universal'){
-      msg("every episode is about "+(r.word||'that')+".", r.line||"narrow it down \u2014 what's it really about tonight?", false,true);
+      msg("every episode is about "+(r.word||'that')+".", r.line||"narrow it down \u2014 what's it really about tonight?", false,!heavy);
     } else if(r.kind==='vague'){
-      msg("be more specific.", r.line||"give me the scene, not the word. where are you, what time is it, who are you thinking about?", false,true);
+      msg("be more specific.", r.line||"give me the scene, not the word. where are you, what time is it, who are you thinking about?", false,!heavy);
     } else if(r.kind==='ask'){
       msg("one thing first \u2014", r.line||"tell me a little more?", false,false);
     } else {
-      msg("i don't have a loop for that yet.", r.line||"none of these are quite it. tell me what it should sound like and it might become one.", true,true);
+      msg("i don't have a loop for that yet.", r.line||"none of these are quite it. tell me what it should sound like and it might become one.", true,!heavy);
     }
-    think.style.display='none';ansd.style.display='block';root.classList.add('answered');}
+    think.style.display='none';ansd.style.display='block';root.classList.add('answered');var _rb=document.getElementById('dvRestart');if(_rb)_rb.style.display='inline-flex';}
   function matchAI(text){
     var avail=[],i;for(i=0;i<EPS.length;i++){if(EPS[i].src)avail.push(EPS[i].n);}
     var ctrl=('AbortController' in window)?new AbortController():null;
@@ -474,6 +528,10 @@ var STOP=["i","im","i'm","a","an","the","and","or","but","so","to","of","in","on
   }
   inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();run();}});
   hint.addEventListener('click',function(e){var b=e.target.closest('b[data-ex]');if(!b)return;inp.value=b.getAttribute('data-ex');autosize();run();});
+  var restart=document.getElementById('dvRestart');
+  if(restart)restart.onclick=function(){pending='';stopThinking();
+    ansd.style.display='none';think.style.display='none';ask.style.display='block';
+    root.classList.remove('answered');restart.style.display='none';inp.value='';autosize();inp.focus();};
   lkb.onclick=function(){var av=[],i;for(i=0;i<EPS.length;i++){if(EPS[i].src)av.push(i);}if(!av.length)return;playEp(av[Math.floor(Math.random()*av.length)]);};
   sgb.onclick=function(){var box=document.getElementById('cmMsg');
     if(box&&lastText)box.value=lastText;
@@ -493,16 +551,18 @@ var EP3_AUDIO="https://friendly-cuchufli-73902b.netlify.app/nightlooper_secretep
 var EP4_AUDIO="https://cosmic-clafoutis-38a615.netlify.app/nightlooper_ep4.m4a";
 var EP5_AUDIO="https://creative-dasik-3ad1dc.netlify.app/nightlooper_tender_v3_to_deploy.m4a";
 var EP6_AUDIO="https://splendorous-crostata-7cd0e0.netlify.app/nightlooper_ep6.m4a";
+var EP7_AUDIO="https://legendary-sherbet-814e57.netlify.app/nightlooper_ep7.m4a";
 var EPS=[{n:1,t:"nice 2 meet u",d:"45:43",bg:"mood-clouds",src:EP1_AUDIO},
          {n:2,t:"hurtsdunnit?",d:"52:16",bg:"mood-stars",src:EP2_AUDIO},
          {n:3,t:"i reminisce",d:"48:30",bg:"mood-cityscape",src:EP3_AUDIO},
          {n:4,t:"i had another dream about us last night",d:"53:35",bg:"mood-dream",src:EP4_AUDIO},
          {n:5,t:"tender",d:"51:05",bg:"mood-tender",src:EP5_AUDIO},
          {n:6,t:"i'm feelin lucky",d:"43:15",bg:"mood-lucky",src:EP6_AUDIO},
-         {n:7,t:"blonde, 10 summers later",d:"",bg:"mood-ferrari",src:null},
-         {n:8,t:"summer muse",d:"",bg:"",src:null},
+         {n:7,t:"blonde, 10 summers later",d:"1:01:37",bg:"mood-ferrari",src:EP7_AUDIO},
+         {n:8,t:"summer muse",d:"",bg:"mood-muse",src:null},
          {n:9,t:"da art of departing",d:"",bg:"",src:null}];
 var cur=0, playing=false, p=0;
+(function(){for(var i=EPS.length-1;i>=0;i--){if(EPS[i]&&EPS[i].src){cur=i;break;}}})(); // default to the latest playable episode
 var bigt=document.getElementById('bigtitle'),eplist=document.getElementById('eplist');
 var audio=document.getElementById('player'), play=document.getElementById('play');
 var sf=document.getElementById('scfill'),scd=document.getElementById('scdot'),scbar=document.getElementById('scbar');
@@ -515,7 +575,7 @@ function updateBg(){
   var onDisc = curView==='discover';
   desktop.classList.toggle('is-playing', playing);
   desktop.classList.toggle('on-discover', onDisc);
-  desktop.classList.remove('mood-clouds','mood-stars','mood-cityscape','mood-dream','mood-tender','mood-lucky','mood-ferrari');
+  desktop.classList.remove('mood-clouds','mood-stars','mood-cityscape','mood-dream','mood-tender','mood-lucky','mood-ferrari','mood-muse');
   if(playing && !onDisc && EPS[cur].bg) desktop.classList.add(EPS[cur].bg);
   starsActive = playing && !onDisc && EPS[cur].bg==='mood-stars';
   cloudsActive = playing && !onDisc && EPS[cur].bg==='mood-clouds';
@@ -523,6 +583,7 @@ function updateBg(){
   tenderActive = playing && !onDisc && EPS[cur].bg==='mood-tender';
   luckyActive = playing && !onDisc && EPS[cur].bg==='mood-lucky';
   ferrariActive = playing && !onDisc && EPS[cur].bg==='mood-ferrari';
+  museActive = playing && !onDisc && EPS[cur].bg==='mood-muse';
   dreamActive = playing && !onDisc && EPS[cur].bg==='mood-dream';
   morseActive = onDisc;
 }
@@ -1097,7 +1158,7 @@ scbar.addEventListener('pointercancel',endScrub);
 (function(){
   var cv=document.getElementById('ferrarifield'); if(!cv) return;
   var ctx=cv.getContext('2d'), COL='234,231,221';
-  var W=0,H=0,dpr=1,t=0,last=0,cleared=false,horizon=0,vpx=0,carY=0,lane=0,laneTarget=0,dashes=[],stars=[],twinkleStars=[];
+  var W=0,H=0,dpr=1,t=0,last=0,cleared=false,horizon=0,vpx=0,carY=0,lane=0,laneTarget=0,dashes=[],stars=[],twinkleStars=[],shooters=[],shTimer=0,shNext=0;
   function rnd(a,b){return a+Math.random()*(b-a);}
   function ink(a){return 'rgba('+COL+','+Math.max(0,Math.min(1,a))+')';}
   function build(){
@@ -1106,6 +1167,15 @@ scbar.addEventListener('pointercancel',endScrub);
     stars=[]; var ns=Math.round(Math.min(26,W/26)),i;
     for(i=0;i<ns;i++)stars.push({x:rnd(0,W),y:rnd(0,horizon-10),r:rnd(.7,1.5),tw:rnd(0,6.28),tws:rnd(.4,1.1),born:1});
     dashes=[]; for(i=0;i<9;i++)dashes.push(i/9); // 0..1 positions along the road (0=near,1=far)
+    shooters=[]; shTimer=0; shNext=rnd(1.2,3);
+  }
+  // a shooting star streaks across the upper sky, leaving a fading cream trail (like ep2)
+  function shoot(){
+    var y=rnd(H*0.05,horizon*0.7), fromLeft=Math.random()<0.5;
+    var x=fromLeft?rnd(-40,W*0.2):rnd(W*0.8,W+40);
+    var dir=fromLeft?1:-1, sp=rnd(7,11);
+    var ang=rnd(0.18,0.42); // slight downward slope
+    shooters.push({x:x,y:y,vx:dir*sp,vy:sp*ang,r:rnd(1.2,2),trail:[],mt:12+((Math.random()*8)|0)});
   }
   function rsz(){dpr=Math.min(window.devicePixelRatio||1,2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);build();}
   // road half-width at a given screen y (0 at horizon, widening downward)
@@ -1120,6 +1190,10 @@ scbar.addEventListener('pointercancel',endScrub);
     lane += (laneTarget-lane)*Math.min(1,dt*10);
     // fade in freshly tapped stars
     for(i=0;i<stars.length;i++){if(stars[i].born<1)stars[i].born=Math.min(1,stars[i].born+dt*2);}
+    // shooting stars: spawn on a timer, advance, drop off-screen
+    shTimer+=dt; if(shTimer>=shNext){shTimer=0;shNext=rnd(2.2,4.5);shoot();}
+    for(i=0;i<shooters.length;i++){var sh=shooters[i];sh.trail.push([sh.x,sh.y]);if(sh.trail.length>sh.mt)sh.trail.shift();sh.x+=sh.vx;sh.y+=sh.vy;}
+    shooters=shooters.filter(function(s){return s.x>-80&&s.x<W+80&&s.y<horizon+40;});
   }
   function roadX(centerOffset, f){ // f: 0 near(bottom) .. 1 far(horizon); centerOffset in [-1,1] across road
     var y=H-(H-horizon)*f, half=roadHalf(y);
@@ -1129,6 +1203,10 @@ scbar.addEventListener('pointercancel',endScrub);
     ctx.lineCap='round';ctx.lineJoin='round';
     // stars
     for(i=0;i<stars.length;i++){var s=stars[i];var a=(.35+.5*Math.sin(t*s.tws+s.tw))*s.born;ctx.fillStyle=ink(a*.85);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.283);ctx.fill();}
+    // shooting stars (fading cream trail + bright head)
+    for(i=0;i<shooters.length;i++){var sh=shooters[i];
+      for(var j=1;j<sh.trail.length;j++){var aa=(j/sh.trail.length)*.6;ctx.strokeStyle=ink(aa);ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(sh.trail[j-1][0],sh.trail[j-1][1]);ctx.lineTo(sh.trail[j][0],sh.trail[j][1]);ctx.stroke();}
+      ctx.fillStyle=ink(.95);ctx.beginPath();ctx.arc(sh.x,sh.y,sh.r,0,6.283);ctx.fill();}
     // moon
     ctx.strokeStyle=ink(.8);ctx.lineWidth=1.5;ctx.fillStyle='#000';crescent(W*0.18,horizon*0.5,Math.max(14,H*0.045));ctx.fill();ctx.stroke();
     // horizon
@@ -1162,13 +1240,19 @@ scbar.addEventListener('pointercancel',endScrub);
   // --- interaction: drag the car left/right (bounded by road), tap sky to add stars ---
   var dragging=false;
   function nearCar(px,py){var cx=carCenterX();return (py>carY-70 && py<carY+30 && Math.abs(px-cx)<70);}
+  function shootFrom(px,py,k){for(var q=0;q<k;q++){var dir=Math.random()<.5?1:-1,sp=rnd(7,11),ang=rnd(0.14,0.4);
+    shooters.push({x:px,y:py,vx:dir*sp,vy:sp*ang,r:rnd(1.2,2),trail:[],mt:12+((Math.random()*8)|0)});}}
+  function starNear(px,py){for(var i=0;i<stars.length;i++){var s=stars[i],dx=s.x-px,dy=s.y-py;if(dx*dx+dy*dy<18*18)return i;}return -1;}
   function onDown(e){ if(!ferrariActive) return;
     if(e.target.closest('#win')||e.target.closest('.dock')||e.target.closest('.menubar')||e.target.closest('.statusbar'))return;
     var px=e.clientX,py=e.clientY;
     if(nearCar(px,py)){dragging=true; setLane(px); e.preventDefault(); }
-    else if(py<horizon){ // tap sky -> a star appears (with a tiny twinkle-in)
-      stars.push({x:px,y:py,r:rnd(1,1.8),tw:rnd(0,6.28),tws:rnd(.5,1.2),born:0});
-      if(stars.length>140)stars.splice(0,stars.length-140);
+    else if(py<horizon){ // tap the sky (like ep2)
+      var hit=starNear(px,py);
+      if(hit>=0){ var s=stars[hit]; shootFrom(s.x,s.y,2+((Math.random()*2)|0)); } // clicked a star -> it flares into shooting stars
+      else { stars.push({x:px,y:py,r:rnd(1,1.8),tw:rnd(0,6.28),tws:rnd(.5,1.2),born:0}); // empty sky -> new star + a shooting star from here
+             if(stars.length>140)stars.splice(0,stars.length-140);
+             shootFrom(px,py,1); }
     }
   }
   function setLane(px){var lim=laneRange(); laneTarget=Math.max(-lim,Math.min(lim,px-vpx)); }
@@ -1179,6 +1263,97 @@ scbar.addEventListener('pointercancel',endScrub);
   document.addEventListener('pointerup',onUp);
   document.addEventListener('pointercancel',onUp);
   window.addEventListener('resize',rsz);
+  rsz();requestAnimationFrame(loop);
+})();
+// ---- first-time welcome popup (shows once via localStorage; degrades gracefully if blocked) ----
+(function(){
+  var w=document.getElementById('nlWelcome'); if(!w) return;
+  function seen(){try{return localStorage.getItem('nl_welcomed')==='1';}catch(e){return false;}}
+  function mark(){try{localStorage.setItem('nl_welcomed','1');}catch(e){}}
+  function open(){w.hidden=false;requestAnimationFrame(function(){w.classList.add('show');});}
+  function close(){w.classList.remove('show');mark();setTimeout(function(){w.hidden=true;},300);}
+  if(!seen()) setTimeout(open,650);
+  var c=document.getElementById('nlwClose');
+  if(c)c.onclick=close;
+  w.addEventListener('click',function(e){if(e.target===w)close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!w.hidden)close();});
+})();
+// ===== ep8 summer muse: heart balloons drift up; tap to pop into falling heart-confetti; a new one rises to replace it — gated on play =====
+(function(){
+  var cv=document.getElementById('musefield'); if(!cv) return;
+  var ctx=cv.getContext('2d'), COL='234,231,221';
+  var W=0,H=0,dpr=1,t=0,last=0,cleared=false,balloons=[],confetti=[];
+  function rnd(a,b){return a+Math.random()*(b-a);}
+  function ink(a){return 'rgba('+COL+','+Math.max(0,Math.min(1,a))+')';}
+  // a clean heart centered at origin, unit ~ height 43 (top lobes down to point at y=34)
+  var HEART=new Path2D("M0,-9 C0,-20 -18,-26 -28,-16 C-40,-4 -34,12 0,34 C34,12 40,-4 28,-16 C18,-26 0,-20 0,-9 Z");
+  function newBalloon(fromBottom){
+    var sc=rnd(0.55,1.05);
+    return {x:rnd(W*0.12,W*0.88), y:fromBottom?H+rnd(30,120):rnd(H*0.2,H*0.95),
+      sc:sc, spd:rnd(14,26)*(0.7+sc*0.4), sway:rnd(0,6.28), swAmp:rnd(8,20), swSpd:rnd(0.5,1.0), pop:0};
+  }
+  function build(){
+    balloons=[]; var n=Math.round(Math.min(6,Math.max(4,W/220))),i;
+    for(i=0;i<n;i++)balloons.push(newBalloon(false));
+    confetti=[];
+  }
+  function rsz(){dpr=Math.min(window.devicePixelRatio||1,2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);build();}
+  function balloonCX(b){return b.x+Math.sin(t*b.swSpd+b.sway)*b.swAmp;}
+  function popBalloon(b){
+    var cx=balloonCX(b), cy=b.y;
+    var k=10+((Math.random()*6)|0),i;
+    for(i=0;i<k;i++){var a=rnd(0,6.28),spd=rnd(40,150);
+      confetti.push({x:cx,y:cy,vx:Math.cos(a)*spd,vy:Math.sin(a)*spd-rnd(20,70),
+        r:rnd(0,6.28),vr:rnd(-4,4),sc:rnd(0.28,0.5),life:0,max:rnd(1.1,1.9),heart:Math.random()<0.7});}
+    // respawn this balloon from the bottom
+    var nb=newBalloon(true); b.x=nb.x;b.y=nb.y;b.sc=nb.sc;b.spd=nb.spd;b.sway=nb.sway;b.swAmp=nb.swAmp;b.swSpd=nb.swSpd;
+  }
+  function step(dt){t+=dt;var i;
+    for(i=0;i<balloons.length;i++){var b=balloons[i];b.y-=b.spd*dt;
+      if(b.y<-60){var nb=newBalloon(true);b.x=nb.x;b.y=nb.y;b.sc=nb.sc;b.spd=nb.spd;b.sway=nb.sway;b.swAmp=nb.swAmp;b.swSpd=nb.swSpd;}}
+    for(i=confetti.length-1;i>=0;i--){var c=confetti[i];c.life+=dt;
+      c.vy+=120*dt;                         // gravity — confetti falls
+      c.x+=c.vx*dt;c.y+=c.vy*dt;c.vx*=0.98;c.r+=c.vr*dt;
+      if(c.life>c.max)confetti.splice(i,1);}
+  }
+  function drawHeart(x,y,sc,rot,alpha,lw){
+    ctx.save();ctx.translate(x,y);if(rot)ctx.rotate(rot);ctx.scale(sc,sc);
+    ctx.fillStyle='#000';ctx.strokeStyle=ink(alpha);ctx.lineWidth=(lw||1.1)/sc;
+    ctx.fill(HEART);ctx.stroke(HEART);ctx.restore();
+  }
+  function draw(){ctx.clearRect(0,0,W,H);var i;
+    ctx.lineCap='round';ctx.lineJoin='round';
+    // balloons + strings
+    for(i=0;i<balloons.length;i++){var b=balloons[i];var cx=balloonCX(b),cy=b.y;
+      // string
+      ctx.strokeStyle=ink(.4);ctx.lineWidth=1;ctx.beginPath();
+      ctx.moveTo(cx,cy+34*b.sc);
+      ctx.quadraticCurveTo(cx+10*b.sc,cy+58*b.sc,cx-3*b.sc,cy+80*b.sc);
+      ctx.quadraticCurveTo(cx-12*b.sc,cy+96*b.sc,cx+4*b.sc,cy+112*b.sc);ctx.stroke();
+      // knot
+      ctx.fillStyle='#000';ctx.strokeStyle=ink(.8);ctx.lineWidth=1.1;
+      ctx.beginPath();ctx.moveTo(cx-4*b.sc,cy+33*b.sc);ctx.lineTo(cx+4*b.sc,cy+33*b.sc);ctx.lineTo(cx,cy+41*b.sc);ctx.closePath();ctx.fill();ctx.stroke();
+      // heart body
+      drawHeart(cx,cy,b.sc,0,.85,1.2);
+      // a little highlight
+      ctx.strokeStyle=ink(.3);ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx-9*b.sc,cy-6*b.sc,4*b.sc,3.6,4.9);ctx.stroke();
+    }
+    // confetti
+    for(i=0;i<confetti.length;i++){var c=confetti[i];var a=Math.max(0,1-c.life/c.max);
+      if(c.heart){drawHeart(c.x,c.y,c.sc,c.r,a*.9,1.6);}
+      else{ctx.fillStyle=ink(a*.8);ctx.beginPath();ctx.arc(c.x,c.y,1.7,0,6.28);ctx.fill();}}
+  }
+  function loop(ts){if(!last)last=ts;var dt=Math.min(.05,(ts-last)/1000);last=ts;
+    if(museActive){cleared=false;step(dt);draw();}else if(!cleared){ctx.clearRect(0,0,W,H);cleared=true;}
+    requestAnimationFrame(loop);}
+  window.addEventListener('resize',rsz);
+  document.addEventListener('click',function(e){if(!museActive)return;
+    if(e.target.closest('#win')||e.target.closest('.dock')||e.target.closest('.menubar')||e.target.closest('.statusbar'))return;
+    var px=e.clientX,py=e.clientY,i,hit=-1,hd=1e9;
+    for(i=0;i<balloons.length;i++){var b=balloons[i];var cx=balloonCX(b),cy=b.y;
+      var dx=px-cx,dy=py-cy,d=dx*dx+dy*dy, rr=(34*b.sc+10)*(34*b.sc+10);
+      if(d<rr&&d<hd){hd=d;hit=i;}}
+    if(hit>=0)popBalloon(balloons[hit]);});
   rsz();requestAnimationFrame(loop);
 })();
 </script>
