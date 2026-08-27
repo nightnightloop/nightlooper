@@ -552,6 +552,7 @@ var EP4_AUDIO="https://cosmic-clafoutis-38a615.netlify.app/nightlooper_ep4.m4a";
 var EP5_AUDIO="https://creative-dasik-3ad1dc.netlify.app/nightlooper_tender_v3_to_deploy.m4a";
 var EP6_AUDIO="https://splendorous-crostata-7cd0e0.netlify.app/nightlooper_ep6.m4a";
 var EP7_AUDIO="https://legendary-sherbet-814e57.netlify.app/nightlooper_ep7.m4a";
+var EP8_AUDIO="https://dazzling-pithivier-8f7341.netlify.app/nightlooper_ep8.m4a";
 var EPS=[{n:1,t:"nice 2 meet u",d:"45:43",bg:"mood-clouds",src:EP1_AUDIO},
          {n:2,t:"hurtsdunnit?",d:"52:16",bg:"mood-stars",src:EP2_AUDIO},
          {n:3,t:"i reminisce",d:"48:30",bg:"mood-cityscape",src:EP3_AUDIO},
@@ -559,10 +560,10 @@ var EPS=[{n:1,t:"nice 2 meet u",d:"45:43",bg:"mood-clouds",src:EP1_AUDIO},
          {n:5,t:"tender",d:"51:05",bg:"mood-tender",src:EP5_AUDIO},
          {n:6,t:"i'm feelin lucky",d:"43:15",bg:"mood-lucky",src:EP6_AUDIO},
          {n:7,t:"blonde, 10 summers later",d:"1:01:37",bg:"mood-ferrari",src:EP7_AUDIO},
-         {n:8,t:"summer muse",d:"",bg:"mood-muse",src:null},
+         {n:8,t:"summer muse",d:"52:42",bg:"mood-muse",src:EP8_AUDIO},
          {n:9,t:"da art of departing",d:"",bg:"",src:null}];
 var cur=0, playing=false, p=0;
-(function(){for(var i=EPS.length-1;i>=0;i--){if(EPS[i]&&EPS[i].src){cur=i;break;}}})(); // default to the latest playable episode
+(function(){for(var i=0;i<EPS.length;i++){if(EPS[i]&&EPS[i].n===8&&EPS[i].src){cur=i;break;}}})(); // default pinned to summer muse (ep8)
 var bigt=document.getElementById('bigtitle'),eplist=document.getElementById('eplist');
 var audio=document.getElementById('player'), play=document.getElementById('play');
 var sf=document.getElementById('scfill'),scd=document.getElementById('scdot'),scbar=document.getElementById('scbar');
