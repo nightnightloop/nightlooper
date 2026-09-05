@@ -22,6 +22,7 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
 .desktop.is-playing.mood-lucky .bg-lucky{opacity:1}
 .desktop.is-playing.mood-ferrari .bg-ferrari{opacity:1}
 .desktop.is-playing.mood-muse .bg-muse{opacity:1}
+.desktop.is-playing.mood-lovers .bg-lovers{opacity:1}
 .desktop.on-discover .bg-morse{opacity:1}
 .bg-morse{transition:opacity .55s ease}
 .bg-clouds canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -32,6 +33,7 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
 .bg-lucky canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .bg-ferrari canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .bg-muse canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.bg-lovers canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 
 .desktop{position:relative;min-height:100vh;display:flex;flex-direction:column}
 .menubar,.stage,.dock,.statusbar{position:relative;z-index:1}
@@ -258,6 +260,7 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
     <div class="bg-lucky bg-layer"><canvas id="koifield"></canvas></div>
     <div class="bg-ferrari bg-layer"><canvas id="ferrarifield"></canvas></div>
     <div class="bg-muse bg-layer"><canvas id="musefield"></canvas></div>
+    <div class="bg-lovers bg-layer"><canvas id="loversfield"></canvas></div>
     <div class="bg-morse bg-layer"><canvas id="morsefield"></canvas></div>
   </div>
   <div class="menubar"><span class="ticker"><span class="track">on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;</span></span><span class="vol"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span></div>
@@ -340,6 +343,7 @@ var tenderActive=false;
 var luckyActive=false;
 var ferrariActive=false;
 var museActive=false;
+var loversActive=false;
 var curView='radio';
 var morseActive=false;
 function go(view){
@@ -479,9 +483,9 @@ var STOP=["i","im","i'm","a","an","the","and","or","but","so","to","of","in","on
     // safety net: an exact episode mood-word (tender/lucky/reminisce/blonde/dream) should match that episode, never 'universal'
     if(r && r.kind==='universal'){
       var word=(txt||'').trim().toLowerCase();
-      var wmap={'tender':5,'lucky':6,"i'm feelin lucky":6,'feelin lucky':6,'reminisce':3,'blonde':7,'blonded':7,'dream':4};
+      var wmap={'tender':5,'lucky':6,"i'm feelin lucky":6,'feelin lucky':6,'reminisce':3,'blonde':7,'blonded':7,'dream':4,'muse':8,'summer muse':8};
       if(wmap[word]!==undefined && epIndexByN(wmap[word])>=0){
-        var wl={5:'tender loop',6:"i'm feelin lucky loop",3:'i reminisce loop',7:'blonde, 10 summers later loop',4:'i had another dream about us last night loop'};
+        var wl={5:'tender loop',6:"i'm feelin lucky loop",3:'i reminisce loop',7:'blonde, 10 summers later loop',4:'i had another dream about us last night loop',8:'summer muse forever loop'};
         r={kind:'match',loops:[{n:wmap[word],loop:wl[wmap[word]],line:''}]};
       }
     }
@@ -553,6 +557,7 @@ var EP5_AUDIO="https://creative-dasik-3ad1dc.netlify.app/nightlooper_tender_v3_t
 var EP6_AUDIO="https://splendorous-crostata-7cd0e0.netlify.app/nightlooper_ep6.m4a";
 var EP7_AUDIO="https://legendary-sherbet-814e57.netlify.app/nightlooper_ep7.m4a";
 var EP8_AUDIO="https://dazzling-pithivier-8f7341.netlify.app/nightlooper_ep8.m4a";
+var EP9_AUDIO="https://precious-toffee-d2ef6d.netlify.app/nightlooper_ep9.m4a";
 var EPS=[{n:1,t:"nice 2 meet u",d:"45:43",bg:"mood-clouds",src:EP1_AUDIO},
          {n:2,t:"hurtsdunnit?",d:"52:16",bg:"mood-stars",src:EP2_AUDIO},
          {n:3,t:"i reminisce",d:"48:30",bg:"mood-cityscape",src:EP3_AUDIO},
@@ -560,8 +565,9 @@ var EPS=[{n:1,t:"nice 2 meet u",d:"45:43",bg:"mood-clouds",src:EP1_AUDIO},
          {n:5,t:"tender",d:"51:05",bg:"mood-tender",src:EP5_AUDIO},
          {n:6,t:"i'm feelin lucky",d:"43:15",bg:"mood-lucky",src:EP6_AUDIO},
          {n:7,t:"blonde, 10 summers later",d:"1:01:37",bg:"mood-ferrari",src:EP7_AUDIO},
-         {n:8,t:"summer muse",d:"52:42",bg:"mood-muse",src:EP8_AUDIO},
-         {n:9,t:"da art of departing",d:"",bg:"",src:null}];
+         {n:8,t:"summer muse forever",d:"52:42",bg:"mood-muse",src:EP8_AUDIO},
+         {n:9,t:"occasional lovers",d:"53:48",bg:"mood-lovers",src:EP9_AUDIO},
+         {n:10,t:"da art of departing",d:"",bg:"",src:null}];
 var cur=0, playing=false, p=0;
 (function(){for(var i=0;i<EPS.length;i++){if(EPS[i]&&EPS[i].n===7&&EPS[i].src){cur=i;break;}}})(); // default pinned to blonde, 10 summers later (ep7)
 var bigt=document.getElementById('bigtitle'),eplist=document.getElementById('eplist');
@@ -576,7 +582,7 @@ function updateBg(){
   var onDisc = curView==='discover';
   desktop.classList.toggle('is-playing', playing);
   desktop.classList.toggle('on-discover', onDisc);
-  desktop.classList.remove('mood-clouds','mood-stars','mood-cityscape','mood-dream','mood-tender','mood-lucky','mood-ferrari','mood-muse');
+  desktop.classList.remove('mood-clouds','mood-stars','mood-cityscape','mood-dream','mood-tender','mood-lucky','mood-ferrari','mood-muse','mood-lovers');
   if(playing && !onDisc && EPS[cur].bg) desktop.classList.add(EPS[cur].bg);
   starsActive = playing && !onDisc && EPS[cur].bg==='mood-stars';
   cloudsActive = playing && !onDisc && EPS[cur].bg==='mood-clouds';
@@ -585,6 +591,7 @@ function updateBg(){
   luckyActive = playing && !onDisc && EPS[cur].bg==='mood-lucky';
   ferrariActive = playing && !onDisc && EPS[cur].bg==='mood-ferrari';
   museActive = playing && !onDisc && EPS[cur].bg==='mood-muse';
+  loversActive = playing && !onDisc && EPS[cur].bg==='mood-lovers';
   dreamActive = playing && !onDisc && EPS[cur].bg==='mood-dream';
   morseActive = onDisc;
 }
@@ -1355,6 +1362,92 @@ scbar.addEventListener('pointercancel',endScrub);
       var dx=px-cx,dy=py-cy,d=dx*dx+dy*dy, rr=(34*b.sc+10)*(34*b.sc+10);
       if(d<rr&&d<hd){hd=d;hit=i;}}
     if(hit>=0)popBalloon(balloons[hit]);});
+  rsz();requestAnimationFrame(loop);
+})();
+// ===== ep9 occasional lovers: a field of daisies; tap one to pluck a petal that drifts down with a random phrase; flowers regrow — gated on play =====
+(function(){
+  var cv=document.getElementById('loversfield'); if(!cv) return;
+  var ctx=cv.getContext('2d'), COL='234,231,221';
+  var W=0,H=0,dpr=1,t=0,last=0,cleared=false,flowers=[],petals=[];
+  var PHRASES=["he loves me","he loves me not","he loves me sometimes","he loves me always","he thinks about me","he doesn't care"];
+  function rnd(a,b){return a+Math.random()*(b-a);}
+  function ink(a){return 'rgba('+COL+','+Math.max(0,Math.min(1,a))+')';}
+  function newFlower(x){
+    var petalCount=8;
+    return {x:x, baseY:rnd(H*0.30,H*0.52), sc:rnd(0.8,1.15), sway:rnd(0,6.28), swSpd:rnd(0.4,0.8),
+      stemLen:rnd(120,200), petals:petalCount, missing:[], regrow:0};
+  }
+  function build(){
+    flowers=[]; petals=[];
+    var n=Math.round(Math.min(5,Math.max(3,W/240))),i;
+    for(i=0;i<n;i++){var x=W*(i+0.5)/n + rnd(-20,20); flowers.push(newFlower(x));}
+  }
+  function rsz(){dpr=Math.min(window.devicePixelRatio||1,2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);build();}
+  function headX(f){return f.x+Math.sin(t*f.swSpd+f.sway)*7*f.sc;}
+  function step(dt){t+=dt;var i;
+    // regrow flowers that were fully plucked
+    for(i=0;i<flowers.length;i++){var f=flowers[i];
+      if(f.missing.length>=f.petals){f.regrow+=dt; if(f.regrow>2.4){f.missing=[];f.regrow=0;}}}
+    // petals fall + drift, phrase fades
+    for(i=petals.length-1;i>=0;i--){var pt=petals[i];pt.life+=dt;
+      pt.vy+=40*dt; pt.x+=pt.vx*dt+Math.sin(t*1.4+pt.ph)*10*dt; pt.y+=pt.vy*dt; pt.rot+=pt.vr*dt;
+      if(pt.life>pt.max)petals.splice(i,1);}
+  }
+  function drawPetal(x,y,rot,sc,alpha){
+    ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.scale(sc,sc);
+    ctx.fillStyle='#000';ctx.strokeStyle=ink(alpha);ctx.lineWidth=1.4/sc;
+    ctx.beginPath();ctx.ellipse(0,0,9,20,0,0,6.283);ctx.fill();ctx.stroke();ctx.restore();
+  }
+  function draw(){ctx.clearRect(0,0,W,H);var i,j;
+    ctx.lineCap='round';ctx.lineJoin='round';
+    for(i=0;i<flowers.length;i++){var f=flowers[i];var hx=headX(f),hy=f.baseY;
+      // stem from head down
+      ctx.strokeStyle=ink(.7);ctx.lineWidth=1.4*f.sc;
+      ctx.beginPath();ctx.moveTo(hx,hy+30*f.sc);
+      ctx.quadraticCurveTo(f.x-8*f.sc,hy+f.stemLen*0.5,f.x+4*f.sc,hy+f.stemLen);ctx.stroke();
+      // a leaf
+      ctx.lineWidth=1.2*f.sc;ctx.beginPath();
+      var ly=hy+f.stemLen*0.55;ctx.moveTo(f.x-4*f.sc,ly);ctx.quadraticCurveTo(f.x+24*f.sc,ly-14*f.sc,f.x+30*f.sc,ly+4*f.sc);ctx.quadraticCurveTo(f.x+10*f.sc,ly+10*f.sc,f.x-4*f.sc,ly);ctx.stroke();
+      // petals (skip missing), fade in during regrow
+      var grow = f.missing.length>=f.petals ? Math.min(1,f.regrow/2.4) : 1;
+      for(j=0;j<f.petals;j++){ if(f.missing.indexOf(j)>=0 && f.missing.length<f.petals) continue;
+        var ang=(j/f.petals)*6.283; var px=hx+Math.cos(ang)*23*f.sc, py=hy+Math.sin(ang)*23*f.sc;
+        var a=(f.missing.length>=f.petals)?grow*0.85:0.85;
+        drawPetal(px,py,ang+1.5708,f.sc,a);
+      }
+      // center
+      ctx.fillStyle='#000';ctx.strokeStyle=ink(.8);ctx.lineWidth=1.4*f.sc;
+      ctx.beginPath();ctx.arc(hx,hy,9*f.sc,0,6.283);ctx.fill();ctx.stroke();
+      ctx.fillStyle=ink(.5);ctx.beginPath();ctx.arc(hx-3*f.sc,hy-2*f.sc,1.2*f.sc,0,6.283);ctx.fill();
+    }
+    // falling petals + phrases
+    for(i=0;i<petals.length;i++){var pt=petals[i];var a=Math.max(0,1-pt.life/pt.max);
+      drawPetal(pt.x,pt.y,pt.rot,pt.sc,a*.9);
+      ctx.save();ctx.font='italic 22px Caveat, cursive';ctx.fillStyle=ink(a*.9);ctx.textAlign='left';
+      ctx.fillText(pt.phrase, pt.x+16, pt.y+6);ctx.restore();
+    }
+  }
+  function pluck(f){
+    // find an available petal index
+    var avail=[],j; for(j=0;j<f.petals;j++)if(f.missing.indexOf(j)<0)avail.push(j);
+    if(!avail.length)return;
+    var idx=avail[(Math.random()*avail.length)|0]; f.missing.push(idx);
+    var hx=headX(f),hy=f.baseY, ang=(idx/f.petals)*6.283;
+    var px=hx+Math.cos(ang)*23*f.sc, py=hy+Math.sin(ang)*23*f.sc;
+    petals.push({x:px,y:py,vx:rnd(-20,20),vy:rnd(0,20),rot:ang+1.5708,vr:rnd(-1.5,1.5),
+      sc:f.sc,ph:rnd(0,6.28),life:0,max:rnd(2.6,3.6),phrase:PHRASES[(Math.random()*PHRASES.length)|0]});
+  }
+  function loop(ts){if(!last)last=ts;var dt=Math.min(.05,(ts-last)/1000);last=ts;
+    if(loversActive){cleared=false;step(dt);draw();}else if(!cleared){ctx.clearRect(0,0,W,H);cleared=true;}
+    requestAnimationFrame(loop);}
+  window.addEventListener('resize',rsz);
+  document.addEventListener('click',function(e){if(!loversActive)return;
+    if(e.target.closest('#win')||e.target.closest('.dock')||e.target.closest('.menubar')||e.target.closest('.statusbar'))return;
+    var px=e.clientX,py=e.clientY,i,hit=-1,hd=1e9;
+    for(i=0;i<flowers.length;i++){var f=flowers[i];var hx=headX(f),hy=f.baseY;
+      var dx=px-hx,dy=py-hy,d=dx*dx+dy*dy, rr=(34*f.sc)*(34*f.sc);
+      if(d<rr&&d<hd){hd=d;hit=i;}}
+    if(hit>=0)pluck(flowers[hit]);});
   rsz();requestAnimationFrame(loop);
 })();
 </script>
