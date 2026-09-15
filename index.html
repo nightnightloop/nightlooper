@@ -23,6 +23,7 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
 .desktop.is-playing.mood-ferrari .bg-ferrari{opacity:1}
 .desktop.is-playing.mood-muse .bg-muse{opacity:1}
 .desktop.is-playing.mood-lovers .bg-lovers{opacity:1}
+.desktop.is-playing.mood-departing .bg-departing{opacity:1}
 .desktop.on-discover .bg-morse{opacity:1}
 .bg-morse{transition:opacity .55s ease}
 .bg-clouds canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -34,6 +35,7 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
 .bg-ferrari canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .bg-muse canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .bg-lovers canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.bg-departing canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 
 .desktop{position:relative;min-height:100vh;display:flex;flex-direction:column}
 .menubar,.stage,.dock,.statusbar{position:relative;z-index:1}
@@ -261,6 +263,7 @@ body{background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased;
     <div class="bg-ferrari bg-layer"><canvas id="ferrarifield"></canvas></div>
     <div class="bg-muse bg-layer"><canvas id="musefield"></canvas></div>
     <div class="bg-lovers bg-layer"><canvas id="loversfield"></canvas></div>
+    <div class="bg-departing bg-layer"><canvas id="departingfield"></canvas></div>
     <div class="bg-morse bg-layer"><canvas id="morsefield"></canvas></div>
   </div>
   <div class="menubar"><span class="ticker"><span class="track">on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;on a night loop&nbsp;&nbsp;&nbsp;</span></span><span class="vol"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span></div>
@@ -344,6 +347,7 @@ var luckyActive=false;
 var ferrariActive=false;
 var museActive=false;
 var loversActive=false;
+var departingActive=false;
 var curView='radio';
 var morseActive=false;
 function go(view){
@@ -558,6 +562,7 @@ var EP6_AUDIO="https://splendorous-crostata-7cd0e0.netlify.app/nightlooper_ep6.m
 var EP7_AUDIO="https://legendary-sherbet-814e57.netlify.app/nightlooper_ep7.m4a";
 var EP8_AUDIO="https://dazzling-pithivier-8f7341.netlify.app/nightlooper_ep8.m4a";
 var EP9_AUDIO="https://precious-toffee-d2ef6d.netlify.app/nightlooper_ep9.m4a";
+var EP10_AUDIO="https://shiny-sorbet-540ae9.netlify.app/nightlooper_ep10.m4a";
 var EPS=[{n:1,t:"nice 2 meet u",d:"45:43",bg:"mood-clouds",src:EP1_AUDIO},
          {n:2,t:"hurtsdunnit?",d:"52:16",bg:"mood-stars",src:EP2_AUDIO},
          {n:3,t:"i reminisce",d:"48:30",bg:"mood-cityscape",src:EP3_AUDIO},
@@ -567,7 +572,7 @@ var EPS=[{n:1,t:"nice 2 meet u",d:"45:43",bg:"mood-clouds",src:EP1_AUDIO},
          {n:7,t:"blonde, 10 summers later",d:"1:01:37",bg:"mood-ferrari",src:EP7_AUDIO},
          {n:8,t:"summer muse forever",d:"52:42",bg:"mood-muse",src:EP8_AUDIO},
          {n:9,t:"occasional lovers",d:"53:48",bg:"mood-lovers",src:EP9_AUDIO},
-         {n:10,t:"da art of departing",d:"",bg:"",src:null}];
+         {n:10,t:"da art of departing",d:"53:59",bg:"mood-departing",src:EP10_AUDIO}];
 var cur=0, playing=false, p=0;
 (function(){for(var i=0;i<EPS.length;i++){if(EPS[i]&&EPS[i].n===7&&EPS[i].src){cur=i;break;}}})(); // default pinned to blonde, 10 summers later (ep7)
 var bigt=document.getElementById('bigtitle'),eplist=document.getElementById('eplist');
@@ -582,7 +587,7 @@ function updateBg(){
   var onDisc = curView==='discover';
   desktop.classList.toggle('is-playing', playing);
   desktop.classList.toggle('on-discover', onDisc);
-  desktop.classList.remove('mood-clouds','mood-stars','mood-cityscape','mood-dream','mood-tender','mood-lucky','mood-ferrari','mood-muse','mood-lovers');
+  desktop.classList.remove('mood-clouds','mood-stars','mood-cityscape','mood-dream','mood-tender','mood-lucky','mood-ferrari','mood-muse','mood-lovers','mood-departing');
   if(playing && !onDisc && EPS[cur].bg) desktop.classList.add(EPS[cur].bg);
   starsActive = playing && !onDisc && EPS[cur].bg==='mood-stars';
   cloudsActive = playing && !onDisc && EPS[cur].bg==='mood-clouds';
@@ -592,6 +597,7 @@ function updateBg(){
   ferrariActive = playing && !onDisc && EPS[cur].bg==='mood-ferrari';
   museActive = playing && !onDisc && EPS[cur].bg==='mood-muse';
   loversActive = playing && !onDisc && EPS[cur].bg==='mood-lovers';
+  departingActive = playing && !onDisc && EPS[cur].bg==='mood-departing';
   dreamActive = playing && !onDisc && EPS[cur].bg==='mood-dream';
   morseActive = onDisc;
 }
@@ -1448,6 +1454,121 @@ scbar.addEventListener('pointercancel',endScrub);
       var dx=px-hx,dy=py-hy,d=dx*dx+dy*dy, rr=(34*f.sc)*(34*f.sc);
       if(d<rr&&d<hd){hd=d;hit=i;}}
     if(hit>=0)pluck(flowers[hit]);});
+  rsz();requestAnimationFrame(loop);
+})();
+// ===== ep10 da art of departing: tap to launch paper airplanes with random vapor trails (straight / curve / cursive loop) through a celestial night with a UFO — gated on play =====
+(function(){
+  var cv=document.getElementById('departingfield'); if(!cv) return;
+  var ctx=cv.getContext('2d'), COL='234,231,221';
+  var W=0,H=0,dpr=1,t=0,last=0,cleared=false,planes=[],stars=[],sparks=[],clouds=[],shoot=null,shTimer=0,shNext=0,ufo=null;
+  function rnd(a,b){return a+Math.random()*(b-a);}
+  function ink(a){return 'rgba('+COL+','+Math.max(0,Math.min(1,a))+')';}
+  function build(){
+    planes=[];
+    stars=[]; var ns=Math.round(Math.min(40,W/22)),i;
+    for(i=0;i<ns;i++)stars.push({x:rnd(0,W),y:rnd(0,H*0.9),r:rnd(.6,1.5),tw:rnd(0,6.28),tws:rnd(.4,1.1)});
+    sparks=[]; var nsp=Math.round(Math.min(5,W/220));
+    for(i=0;i<nsp;i++)sparks.push({x:rnd(W*0.08,W*0.92),y:rnd(H*0.06,H*0.6),s:rnd(4,7),tw:rnd(0,6.28),tws:rnd(.6,1.2)});
+    clouds=[]; var nc=Math.round(Math.min(4,W/240));
+    for(i=0;i<nc;i++)clouds.push(newCloud(rnd(0,W)));
+    shoot=null; shTimer=0; shNext=rnd(3,7);
+    ufo={x:-80,y:rnd(H*0.12,H*0.32),spd:rnd(22,34),bob:rnd(0,6.28),gone:false,zip:0};
+  }
+  function newCloud(x){return {x:(x===undefined?W+rnd(30,120):x),y:rnd(H*0.55,H*0.9),sc:rnd(0.6,1.15),spd:rnd(6,16),puff:rnd(0,6.28)};}
+  function rsz(){dpr=Math.min(window.devicePixelRatio||1,2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);build();}
+  // launch a paper plane from (px,py) heading up; pick a random trail style
+  function launch(px,py){
+    var style=['straight','curve','loop'][(Math.random()*3)|0];
+    var dir=(px<W*0.5)?1:-1;                       // curl toward screen center-ish
+    planes.push({x:px,y:py, t:0, style:style, spd:rnd(150,230),
+      ang:rnd(-1.5,-1.1),                          // heading up (radians)
+      curveAmt:rnd(0.5,1.3)*dir, loopPhase:rnd(0,6.28), loopDir:(Math.random()<0.5?1:-1),
+      trail:[], sc:rnd(0.8,1.15)});
+  }
+  function step(dt){t+=dt;var i,j;
+    // planes fly along their style
+    for(i=planes.length-1;i>=0;i--){var pl=planes[i];pl.t+=dt;
+      if(pl.style==='straight'){ /* ang steady */ }
+      else if(pl.style==='curve'){ pl.ang += pl.curveAmt*0.35*dt; }
+      else { pl.ang += Math.sin(pl.t*3.2+pl.loopPhase)*3.4*pl.loopDir*dt; } // cursive loops
+      pl.x+=Math.cos(pl.ang)*pl.spd*dt; pl.y+=Math.sin(pl.ang)*pl.spd*dt;
+      pl.trail.push([pl.x,pl.y]); if(pl.trail.length>90)pl.trail.shift();
+      if(pl.y< -60 || pl.x< -80 || pl.x> W+80){ if(pl.trail.length>1)pl.trail.shift(); if(pl.trail.length<=1)planes.splice(i,1); }
+    }
+    // twinkles handled in draw
+    // shooting star
+    shTimer+=dt; if(!shoot && shTimer>=shNext){shTimer=0;shNext=rnd(4,9);
+      var fromLeft=Math.random()<.5; shoot={x:fromLeft?rnd(0,W*0.3):rnd(W*0.7,W),y:rnd(H*0.05,H*0.4),vx:(fromLeft?1:-1)*rnd(260,360),vy:rnd(90,150),tr:[]};}
+    if(shoot){shoot.tr.push([shoot.x,shoot.y]);if(shoot.tr.length>10)shoot.tr.shift();shoot.x+=shoot.vx*dt;shoot.y+=shoot.vy*dt;if(shoot.x<-40||shoot.x>W+40||shoot.y>H*0.6)shoot=null;}
+    // clouds
+    for(i=0;i<clouds.length;i++){var c=clouds[i];c.x-=c.spd*dt;if(c.x<-100*c.sc)clouds[i]=newCloud();}
+    // ufo drifts across; if zipping, accelerate away
+    if(ufo){ if(ufo.zip>0){ufo.zip+=dt; ufo.x+=(420+ufo.zip*600)*dt; ufo.y-=120*dt; if(ufo.x>W+120){ufo=null;}}
+      else { ufo.x+=ufo.spd*dt; if(ufo.x>W+80){ufo.x=-80;ufo.y=rnd(H*0.1,H*0.34);} } }
+  }
+  function drawPlane(pl){
+    ctx.save();ctx.translate(pl.x,pl.y);ctx.rotate(pl.ang);ctx.scale(pl.sc,pl.sc);
+    ctx.fillStyle='#000';ctx.strokeStyle=ink(.9);ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(-24,0);ctx.lineTo(28,-10);ctx.lineTo(-3,17);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(-24,0);ctx.lineTo(28,-10);ctx.lineTo(1,0);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.lineWidth=1.1;ctx.beginPath();ctx.moveTo(1,0);ctx.lineTo(-3,17);ctx.stroke();
+    ctx.restore();
+  }
+  function crescent(mx,my,mr){ctx.beginPath();ctx.arc(mx,my,mr,Math.PI/2,Math.PI*3/2,false);ctx.arc(mx+mr*0.5,my,mr*0.85,Math.PI*3/2,Math.PI/2,true);ctx.closePath();}
+  function draw(){ctx.clearRect(0,0,W,H);var i,j;
+    ctx.lineCap='round';ctx.lineJoin='round';
+    // stars
+    for(i=0;i<stars.length;i++){var s=stars[i];var a=.3+.5*Math.sin(t*s.tws+s.tw);ctx.fillStyle=ink(a*.8);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.28);ctx.fill();}
+    // sparkle (4-point) stars
+    for(i=0;i<sparks.length;i++){var sp=sparks[i];var a=.4+.5*Math.sin(t*sp.tws+sp.tw);var L=sp.s*(0.7+0.5*Math.sin(t*sp.tws+sp.tw));ctx.strokeStyle=ink(a*.8);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(sp.x,sp.y-L);ctx.lineTo(sp.x,sp.y+L);ctx.moveTo(sp.x-L,sp.y);ctx.lineTo(sp.x+L,sp.y);ctx.stroke();}
+    // moon
+    ctx.strokeStyle=ink(.8);ctx.lineWidth=1.5;ctx.fillStyle='#000';crescent(W*0.82,H*0.16,Math.max(16,H*0.055));ctx.fill();ctx.stroke();
+    // clouds
+    for(i=0;i<clouds.length;i++){var c=clouds[i],s=c.sc,x=c.x,y=c.y,wv=Math.sin(t*0.6+c.puff)*2;
+      ctx.strokeStyle=ink(.34+0.12*s);ctx.lineWidth=1.2;ctx.beginPath();
+      ctx.moveTo(x-30*s,y+10*s);ctx.quadraticCurveTo(x-38*s,y-4*s+wv,x-20*s,y-6*s);
+      ctx.quadraticCurveTo(x-14*s,y-20*s,x+2*s,y-12*s);ctx.quadraticCurveTo(x+12*s,y-22*s,x+22*s,y-8*s);
+      ctx.quadraticCurveTo(x+40*s,y-8*s,x+32*s,y+10*s);ctx.closePath();ctx.stroke();}
+    // shooting star
+    if(shoot){for(j=1;j<shoot.tr.length;j++){var aa=(j/shoot.tr.length)*.6;ctx.strokeStyle=ink(aa);ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(shoot.tr[j-1][0],shoot.tr[j-1][1]);ctx.lineTo(shoot.tr[j][0],shoot.tr[j][1]);ctx.stroke();}
+      ctx.fillStyle=ink(.95);ctx.beginPath();ctx.arc(shoot.x,shoot.y,1.7,0,6.28);ctx.fill();}
+    // plane trails (dashed for straight/curve, solid for loop) + planes
+    for(i=0;i<planes.length;i++){var pl=planes[i];
+      if(pl.trail.length>1){ctx.strokeStyle=ink(.5);ctx.lineWidth=1.3;
+        if(pl.style==='loop'){ctx.setLineDash([]);}else{ctx.setLineDash([2,7]);}
+        ctx.beginPath();ctx.moveTo(pl.trail[0][0],pl.trail[0][1]);
+        for(j=1;j<pl.trail.length;j++)ctx.lineTo(pl.trail[j][0],pl.trail[j][1]);
+        ctx.stroke();ctx.setLineDash([]);}
+      drawPlane(pl);
+    }
+    // UFO
+    if(ufo){var uy=ufo.y+Math.sin(t*1.6+ufo.bob)*4;
+      ctx.save();ctx.translate(ufo.x,uy);
+      ctx.strokeStyle=ink(.85);ctx.lineWidth=1.5;ctx.fillStyle='#000';
+      // beam
+      ctx.strokeStyle=ink(.28);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(-9,7);ctx.lineTo(-16,26);ctx.moveTo(9,7);ctx.lineTo(16,26);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(-16,26);ctx.quadraticCurveTo(0,32,16,26);ctx.stroke();
+      // body
+      ctx.strokeStyle=ink(.85);ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(0,0,26,8,0,0,6.28);ctx.fill();ctx.stroke();
+      // dome
+      ctx.beginPath();ctx.moveTo(-14,-2);ctx.quadraticCurveTo(0,-16,14,-2);ctx.stroke();
+      // rim lights
+      ctx.fillStyle=ink(.6+.35*Math.sin(t*4));ctx.beginPath();ctx.arc(-14,2,1.4,0,6.28);ctx.arc(0,4,1.4,0,6.28);ctx.arc(14,2,1.4,0,6.28);ctx.fill();
+      ctx.restore();
+    }
+  }
+  function loop(ts){if(!last)last=ts;var dt=Math.min(.05,(ts-last)/1000);last=ts;
+    if(departingActive){cleared=false;step(dt);draw();}else if(!cleared){ctx.clearRect(0,0,W,H);cleared=true;}
+    requestAnimationFrame(loop);}
+  window.addEventListener('resize',rsz);
+  document.addEventListener('pointerdown',function(e){ if(!departingActive)return;
+    var tg=e.target; if(tg&&tg.closest&&(tg.closest('#win')||tg.closest('.dock')||tg.closest('.menubar')||tg.closest('.statusbar')))return;
+    var px=e.clientX,py=e.clientY;
+    // tap the UFO -> it zips away
+    if(ufo&&ufo.zip===0){var uy=ufo.y+Math.sin(t*1.6+ufo.bob)*4;var dx=px-ufo.x,dy=py-uy;if(dx*dx+dy*dy<34*34){ufo.zip=0.001;return;}}
+    launch(px,py);
+    if(e.cancelable)e.preventDefault();
+  });
   rsz();requestAnimationFrame(loop);
 })();
 </script>
